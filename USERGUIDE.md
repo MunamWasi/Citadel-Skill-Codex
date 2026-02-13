@@ -38,8 +38,9 @@ Restart Codex to pick up the new skill.
 
 ```bash
 git clone https://github.com/MunamWasi/Citadel-Skill-Codex.git
+cd Citadel-Skill-Codex
 mkdir -p ~/.codex/skills/citadel
-rsync -a --exclude '.git' --exclude 'test' ./Citadel-Skill-Codex/ ~/.codex/skills/citadel/
+rsync -a --exclude '.git' --exclude 'test' ./ ~/.codex/skills/citadel/
 ```
 
 Restart Codex to pick up the new skill.
@@ -60,6 +61,8 @@ The skill has a decision rule:
 ## Configure Your Mighty API Key (Paid Gateway)
 
 The paid Gateway uses an API key passed in the `X-API-Key` header. The helper script reads it from the `MIGHTY_API_KEY` environment variable (or `--api-key`).
+
+Do not commit your API key into git. This repo ignores `.env` files via `.gitignore`.
 
 ### Option A (Recommended): Environment Variable
 
@@ -136,6 +139,5 @@ python3 scripts/scan_gateway.py --api-key test --base-url http://127.0.0.1:18081
 Remove the skill folder or symlink and restart Codex:
 
 ```bash
-rm ~/.codex/skills/citadel
+rm -rf ~/.codex/skills/citadel
 ```
-
