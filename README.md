@@ -1,6 +1,6 @@
 # Citadel Codex Skill
 
-Use this Codex skill to integrate TryMightyAI Citadel protections into LLM apps:
+Use this Codex skill to integrate [Mighty AI](https://trymighty.ai) Citadel protections into LLM apps:
 - Prompt-injection and jailbreak detection
 - Credential-leak detection
 - Input/output scanning for chat and RAG pipelines

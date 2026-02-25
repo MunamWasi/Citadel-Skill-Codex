@@ -1,6 +1,6 @@
 ---
 name: citadel
-description: Use to implement or operate TryMightyAI Citadel for prompt-injection, jailbreak, and credential-leak protection. Use the free Go OSS CLI or local sidecar for text-only input/output scanning. Use the paid Citadel Gateway /v1/scan for multimodal (images, PDFs, documents) or when a Mighty API key is provided (including pro API keys). Apply in chat or RAG apps to scan user prompts, retrieved content, tool outputs, and model responses.
+description: Use to implement or operate Mighty AI Citadel for prompt-injection, jailbreak, and credential-leak protection. Use the free Go OSS CLI or local sidecar for text-only input/output scanning. Use the paid Citadel Gateway /v1/scan for multimodal (images, PDFs, documents) or when a Mighty API key is provided (including pro API keys). Apply in chat or RAG apps to scan user prompts, retrieved content, tool outputs, and model responses.
 ---
 
 # Citadel
