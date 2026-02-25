@@ -6,6 +6,7 @@ __pycache__/
 .venv/
 venv/
 test/
+tmp-smoke/
 
 # Secrets
 .env
