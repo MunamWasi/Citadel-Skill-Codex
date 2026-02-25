@@ -1,13 +1,13 @@
 ---
 name: citadel
-description: Use to implement or operate TryMightyAI Citadel for prompt-injection, jailbreak, and credential-leak protection. Use the free Go OSS CLI or local sidecar for text-only input/output scanning. Use the paid Citadel Gateway /v1/scan for multimodal (images, PDFs, documents) or when a Mighty API key is provided. Apply in chat or RAG apps to scan user prompts, retrieved content, tool outputs, and model responses.
+description: Use to implement or operate TryMightyAI Citadel for prompt-injection, jailbreak, and credential-leak protection. Use the free Go OSS CLI or local sidecar for text-only input/output scanning. Use the paid Citadel Gateway /v1/scan for multimodal (images, PDFs, documents) or when a Mighty API key is provided (including pro API keys). Apply in chat or RAG apps to scan user prompts, retrieved content, tool outputs, and model responses.
 ---
 
 # Citadel
 
 ## Decision rule
 - If the task is text-only and no paid API key is present, use Citadel OSS (CLI or local HTTP sidecar).
-- If the user provides images/PDFs/docs, requests multimodal scanning, or provides a Mighty API key, use Citadel Gateway `/v1/scan`.
+- If the user provides images/PDFs/docs, requests multimodal scanning, or provides a Mighty API key (regular or pro), use Citadel Gateway `/v1/scan`.
 - Default to fail-closed (block on errors/timeouts) unless the user requests fail-open.
 
 ## Citadel OSS (text guard)
@@ -55,7 +55,7 @@ Header: `X-API-Key: <key>`
 
 ### References and scripts
 - Read `references/mighty-gateway.md` for full parameter and error details.
-- Prefer `scripts/scan_gateway.py` for Gateway requests; it handles base64 and required fields.
+- Prefer `scripts/scan_gateway.py` for Gateway requests; it handles base64, required fields, and key fallback (`MIGHTY_PRO_API_KEY` then `MIGHTY_API_KEY`).
 
 ## Integration patterns
 - Chat app: scan user prompt (input), call LLM, scan response (output).

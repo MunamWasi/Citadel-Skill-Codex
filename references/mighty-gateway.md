@@ -5,6 +5,12 @@ Base URL: https://gateway.trymighty.ai
 POST /v1/scan
 Header: X-API-Key: <key>
 
+## Authentication
+- `scripts/scan_gateway.py` auth precedence:
+- `--api-key` argument (highest priority)
+- `MIGHTY_PRO_API_KEY`
+- `MIGHTY_API_KEY`
+
 ## Request fields
 Required:
 - content: string (text) or base64 (image/pdf/document)

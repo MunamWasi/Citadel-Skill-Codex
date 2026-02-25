@@ -8,7 +8,7 @@ Usage:
   python scripts/scan_gateway.py --file ./image.png --scan-phase input --profile balanced --analysis-mode comprehensive
 
 Auth:
-  Set MIGHTY_API_KEY or pass --api-key.
+  Pass --api-key, or set MIGHTY_PRO_API_KEY / MIGHTY_API_KEY.
 """
 
 import argparse
@@ -21,6 +21,8 @@ from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 DEFAULT_BASE_URL = "https://gateway.trymighty.ai"
+DEFAULT_API_KEY_ENV = "MIGHTY_API_KEY"
+PRO_API_KEY_ENV = "MIGHTY_PRO_API_KEY"
 
 
 def b64_file(path: Path) -> str:
@@ -30,6 +32,21 @@ def b64_file(path: Path) -> str:
 def sh_single_quote(value: str) -> str:
     # Wrap in single quotes and escape internal single quotes for safe copy/paste in sh/zsh/bash.
     return "'" + value.replace("'", "'\"'\"'") + "'"
+
+
+def resolve_api_key(cli_api_key: str | None) -> tuple[str, str]:
+    if cli_api_key:
+        return cli_api_key, "--api-key"
+
+    pro_api_key = os.getenv(PRO_API_KEY_ENV)
+    if pro_api_key:
+        return pro_api_key, PRO_API_KEY_ENV
+
+    api_key = os.getenv(DEFAULT_API_KEY_ENV)
+    if api_key:
+        return api_key, DEFAULT_API_KEY_ENV
+
+    return "", ""
 
 
 def post_json(url: str, api_key: str, payload: dict, timeout_s: int) -> tuple[int, str]:
@@ -57,7 +74,11 @@ def post_json(url: str, api_key: str, payload: dict, timeout_s: int) -> tuple[in
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--api-key", default=os.getenv("MIGHTY_API_KEY"), help="Mighty API key (or set MIGHTY_API_KEY)")
+    parser.add_argument(
+        "--api-key",
+        default=None,
+        help="Mighty API key (if omitted: MIGHTY_PRO_API_KEY, then MIGHTY_API_KEY)",
+    )
     parser.add_argument("--base-url", default=DEFAULT_BASE_URL)
     parser.add_argument("--text", help="Text content to scan")
     parser.add_argument("--file", help="Path to file to scan (image/pdf/document)")
@@ -83,6 +104,7 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="Print the request payload and exit")
     parser.add_argument("--print-curl", action="store_true", help="Print a curl command and exit")
     args = parser.parse_args()
+    api_key, api_key_source = resolve_api_key(args.api_key)
 
     if bool(args.text) == bool(args.file):
         print("Provide exactly one of --text or --file.", file=sys.stderr)
@@ -129,13 +151,13 @@ def main() -> int:
     url = f"{args.base_url.rstrip('/')}/v1/scan"
 
     if args.print_curl:
-        # Use $MIGHTY_API_KEY to avoid leaking a real key into terminal history.
+        # Use env vars to avoid leaking a real key into terminal history.
         json_payload = json.dumps(payload, separators=(",", ":"), ensure_ascii=True)
         print(
             "curl -sS -X POST "
             f"{sh_single_quote(url)} "
             "-H 'Content-Type: application/json' "
-            "-H 'X-API-Key: ${MIGHTY_API_KEY}' "
+            "-H 'X-API-Key: ${MIGHTY_PRO_API_KEY:-$MIGHTY_API_KEY}' "
             f"--data {sh_single_quote(json_payload)}"
         )
         return 0
@@ -146,6 +168,7 @@ def main() -> int:
                 {
                     "url": url,
                     "headers": {"Content-Type": "application/json", "X-API-Key": "<redacted>"},
+                    "auth_source": api_key_source or "<none>",
                     "payload": payload,
                 },
                 indent=2,
@@ -154,11 +177,14 @@ def main() -> int:
         )
         return 0
 
-    if not args.api_key:
-        print("Missing API key. Provide --api-key or set MIGHTY_API_KEY.", file=sys.stderr)
+    if not api_key:
+        print(
+            "Missing API key. Provide --api-key or set MIGHTY_PRO_API_KEY/MIGHTY_API_KEY.",
+            file=sys.stderr,
+        )
         return 2
 
-    status_code, body_text = post_json(url=url, api_key=args.api_key, payload=payload, timeout_s=args.timeout)
+    status_code, body_text = post_json(url=url, api_key=api_key, payload=payload, timeout_s=args.timeout)
 
     try:
         out = json.loads(body_text)
@@ -174,4 +200,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
