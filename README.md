@@ -48,6 +48,11 @@ Decision rule used by the skill:
 - Text-only and no paid key: use Citadel OSS CLI/sidecar.
 - Images/PDF/docs or paid key present: use Citadel Gateway `/v1/scan`.
 
+What actually gets scanned:
+- Only requests you explicitly send through the OSS CLI/sidecar or Gateway `/v1/scan`
+- Not every app request automatically
+- If you want hard enforcement, wire Citadel into the path used by every LLM input/output call
+
 ## API Key Setup (Gateway)
 
 `scripts/scan_gateway.py` resolves auth in this order:
@@ -63,6 +68,8 @@ export MIGHTY_PRO_API_KEY="YOUR_PRO_KEY_HERE"
 export MIGHTY_API_KEY="YOUR_KEY_HERE"
 ```
 
+In production, put the same env var in your hosting provider's secret store or runtime environment settings.
+
 Security note:
 - Do not commit secrets.
 - `.env` and `.env.*` are ignored by `.gitignore`.
@@ -74,6 +81,8 @@ Dry run (no network call):
 ```bash
 python3 scripts/scan_gateway.py --text "hello" --dry-run
 ```
+
+Use the `auth_source` field in that output to verify which key source is being used.
 
 Print equivalent curl:
 
@@ -94,6 +103,11 @@ Terminal B:
 ```bash
 python3 scripts/scan_gateway.py --api-key test --base-url http://127.0.0.1:18081 --text "hello"
 ```
+
+How to verify Citadel is really in the path:
+- Send one safe prompt and one obvious attack prompt through your actual app integration
+- Confirm your integration receives Citadel fields such as `action`, `risk_score`, or `risk_level`
+- A model refusal by itself is not proof Citadel ran; provider safety can also refuse requests
 
 ## Uninstall
 

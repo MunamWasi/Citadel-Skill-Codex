@@ -1,4 +1,7 @@
 interface:
   display_name: "Citadel"
   short_description: "OSS text guard + optional paid multimodal scans"
-  default_prompt: "Use $citadel to secure an LLM app: default to the free OSS CLI/sidecar for text-only input/output scans, and use the paid Citadel Gateway /v1/scan for multimodal files (images/PDFs/docs) or when a regular/pro API key is provided."
+  icon_small: "./assets/citadel-icon.svg"
+  icon_large: "./assets/citadel-logo.svg"
+  brand_color: "#FF8A00"
+  default_prompt: "Use $citadel to show where to set `MIGHTY_PRO_API_KEY` or `MIGHTY_API_KEY`, what traffic actually goes through Citadel, and how to verify the integration is working."

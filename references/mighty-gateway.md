@@ -47,8 +47,8 @@ Optional (recommended defaults in parentheses):
 
 ## Local tooling
 - `scripts/scan_gateway.py` supports:
-- `--dry-run` to print the URL/headers/payload without sending a request.
-- `--print-curl` to print a copy-pastable curl command (uses `$MIGHTY_API_KEY` to avoid leaking a real key).
+- `--dry-run` to print the URL/headers/payload and `auth_source` without sending a request.
+- `--print-curl` to print a copy-pastable curl command (uses `${MIGHTY_PRO_API_KEY:-$MIGHTY_API_KEY}` to avoid leaking a real key).
 - For offline request/response-shape testing, run the local stub server:
 - `python scripts/mock_gateway_server.py --port 18081`
 - `python scripts/scan_gateway.py --api-key test --base-url http://127.0.0.1:18081 --text "hello"`

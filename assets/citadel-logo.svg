@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Citadel logo">
+  <defs>
+    <linearGradient id="shield" x1="108" y1="64" x2="404" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFB000"/>
+      <stop offset="0.52" stop-color="#FF7A00"/>
+      <stop offset="1" stop-color="#C2410C"/>
+    </linearGradient>
+    <linearGradient id="core" x1="172" y1="136" x2="340" y2="348" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFF3D1"/>
+      <stop offset="1" stop-color="#FFE19A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#1C1917"/>
+  <path d="M256 48 400 102v108c0 97-59 168-144 216-85-48-144-119-144-216V102L256 48Z" fill="url(#shield)"/>
+  <path d="M256 116 334 160v59c0 57-31 102-78 139-47-37-78-82-78-139v-59l78-44Z" fill="url(#core)"/>
+  <path d="m204 244 36 36 72-81" fill="none" stroke="#7C2D12" stroke-linecap="round" stroke-linejoin="round" stroke-width="28"/>
+</svg>
